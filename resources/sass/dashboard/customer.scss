@@ -1,0 +1,427 @@
+//Drop menu
+.list__customers--color--cursor {
+    cursor: pointer;
+}
+
+.customer__dropdown--list {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.blade__search--bankingEnterprise, .blade__search--bankingPersonal {
+    background: white;
+    position: absolute;
+    z-index: 1;
+    width: 98%;
+    top: 49px;
+    border-radius: 10px;
+}
+
+.item__data--bankingCustomer {
+    position: absolute;
+    z-index: 1;
+    background: white !important;
+    height: 170px;
+    font-size: 18px;
+    color: #333;
+    font-weight: 600;
+    padding: 10px;
+    border-bottom: 1px solid #8080804a;
+    display: flex;
+    justify-content: space-between;
+}
+
+.item__data--bankingCustomer:hover {
+    background: #F0F0F0;
+    border-radius: 5px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.customer__dropdown--list:hover .dropdown-content {
+    display: block;
+}
+
+.content__exp--hover--active:hover {
+    background: #F4F4F4 !important;
+}
+
+.customer__status--list {
+    color: #472FC8;
+    position: relative;
+}
+
+.customer__status--list::after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    color: #472FC8 !important;
+    background-color: #472FC8;
+    left: 50%;
+    bottom: -10px;
+    transition: all 0.4s ease-in-out;
+}
+
+.customer__li--border:hover {
+    .customer__status--list::after {
+        width: 100%;
+        left: 0;
+        height: 3px;
+    }
+}
+
+.customer__li--border a:hover {
+    color: #472FC8 !important;
+}
+
+.list__customers--status--text--active {
+    color: #472FC8 !important;
+}
+
+.list__customers--status--border--active {
+    border-bottom: 3px solid #472FC8 !important;
+    padding-bottom: 7px;
+}
+
+.list__customers--status-color {
+    color: #828282;
+    font-size: 15px;
+}
+
+.content__upload--file--item {
+    cursor: pointer;
+}
+
+li.content__upload--file--item:hover {
+    background: #F4F4F4 !important;
+}
+
+.button__takeInformation--addCustomer {
+    right: -8px;
+    top: 0
+}
+
+.customerType__null--td {
+    width: 210px
+}
+
+.pagination__icon--page {
+    color: #472FC8;
+}
+
+.pagination__number--page {
+    width: 30px;
+    height: 30px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    //border-radius: 0.6rem;
+    background: #472FC8;
+
+    &:active {
+        color: white;
+        border-radius: 5px;
+        background: #472FC8;
+    }
+}
+
+.pagination__number--size {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+        color: white;
+        //border-radius: 5px;
+        background: #472FC8;
+        box-shadow: 0 0 15px rgba(33, 33, 33, .2);
+    }
+}
+
+.application__addFile--button{
+    width:30px;
+    height:30px;
+}
+
+.content__exp--yes--active {
+    background: #F4F4F4 !important;
+}
+
+
+.blade__search--bankingEdit {
+    box-shadow: 10px 5px 11px;
+    position: absolute;
+    z-index: 1;
+    width: 73%;
+    top: -160px;
+    left: 28px;
+    border-radius: 10px;
+}
+
+.value__banking--active{
+    font-size: 18px;
+    color: #333;
+    font-weight: 600;
+    padding: 10px;
+    border-bottom: 1px solid #8080804a;
+    display: flex;
+    justify-content: space-between;
+}
+
+.value__banking--active:hover {
+    background-color: #dfe6e9;
+    border-radius: 5px;
+}
+
+//    Color input file
+.application__updateFile--background{
+    background: #eee;
+    border: 1px solid #ddd;
+}
+
+//scss file
+
+.input__file--none {
+    display: none;
+}
+
+.application__file--customize {
+    label {
+        display: flex;
+        background: #eee;
+        border: 1px solid #ddd;
+        padding: 5px;
+        align-items: center;
+        border-radius: 2px;
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    .application__file--inputFile {
+        cursor: pointer;
+        & ~ .application__file--inputFile {
+            label {
+                display: none;
+            }
+        }
+        &.error {
+        border: none;
+            .file-name {
+            color: #ca4a17;
+            }
+        }
+    }
+
+    .file-item {
+        position: relative;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        &.hide-btn {
+            display: none;
+        }
+    }
+
+    .file-name {
+        font-size: 16px;
+        font-style: italic;
+        line-height: 26px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 10px;
+    }
+    .btn-del-file {
+        width: 35px;
+        min-width: 16px;
+        height: 30px;
+        line-height: 16px;
+        border-radius: 3px;
+        color: #fff;
+        transition: all .2s;
+        background-color: #177cca;
+        &:hover, &:focus {
+            background-color: #ca4a17;
+            }
+        }
+    }
+
+
+
+
+
+
+
+// Gooey menu
+
+
+//vars
+$fg:#472FC8;
+
+//config
+$menu-items:4;
+
+
+%goo{
+  filter:url('#shadowed-goo');
+}
+%ball{
+  background:$fg;
+  border-radius:100%;
+  width:40px;
+  height:40px;
+  margin-left:-40px;
+  position:absolute;
+  top:30px;
+  color:white;
+  text-align:center;
+  line-height:80px;
+  transform:translate3d(0,0,0);
+  transition:transform ease-out 200ms;
+}
+
+.menu-open{
+    display:none;
+}
+
+.menu-item{
+  @extend %ball;
+
+}
+.menu-item{
+    &:hover{
+      background:white;
+      color:$fg;
+      border: 1px solid $fg;
+    }
+    @for $i from 1 through $menu-items{
+      &:nth-child(#{$i+2}){
+        transition-duration:180ms;
+      }
+    }
+  }
+
+.menu-open:checked+.menu-open-button{
+  .fa-plus{
+    transform:translate3d(0,0,0) rotate(45deg);
+  }
+}
+.menu{
+  @extend %goo;
+  $width:650px;
+  $height:150px;
+  padding-left:45px;
+  height: 80px;
+  box-sizing:border-box;
+  font-size:20px;
+  text-align:left;
+}
+
+
+
+
+.menu-open-button{
+  @extend %ball;
+  z-index:2;
+  transition-timing-function:cubic-bezier(0.175, 0.885, 0.320, 1.275);
+  transition-duration:400ms;
+  transform:scale(1.1,1.1) translate3d(0,0,0);
+  cursor:pointer;
+}
+.menu-open-button:hover{
+  transform:scale(1.2,1.2) translate3d(0,0,0);
+}
+.menu-open:checked+.menu-open-button{
+  transition-timing-function:linear;
+  transition-duration:200ms;
+  transform:scale(0.8,0.8) translate3d(0,0,0);
+}
+
+.menu-open:checked~.menu-item{
+  transition-timing-function:cubic-bezier(0.165, 0.840, 0.440, 1.000);
+  @for $i from 1 through $menu-items{
+
+    &:nth-child(#{$i+2}){
+      transition-duration:90ms+(100ms*$i);
+      transform:translate3d(70px*$i,0,0);
+    }
+  }
+}
+
+// application for thought
+
+.delete__data--button{
+    cursor:pointer;
+    transition: transform 0.1s;
+    &:hover {
+        transform: scale(1.2);
+    }
+}
+
+
+//responsive
+
+/* Ipad ngang (1024X768) */
+@media screen and (max-width:1024px){
+
+}
+
+@media screen and (max-width: 769px) {
+
+}
+
+@media screen and (min-width: 769px) {
+    .btn-search__customer {
+        display: block !important;
+    }
+}
+
+
+/* Ipad doc (768x1024) */
+@media screen and (max-width:767px){
+    .list__customer--respon {
+        text-align: center;
+        margin-left: 17px;
+    }
+
+    ul.list__customer--ul {
+        margin-top: 7px;
+        margin-bottom: 0px;
+    }
+
+    .btn-search__customer {
+        display: none !important;
+    }
+
+}
+/* tablet nhỏ (480x640) */
+@media screen and (max-width:480px){
+
+}
+
+

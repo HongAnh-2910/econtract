@@ -1,0 +1,805 @@
+
+.header__status--fz {
+    font-size: 15px;
+}
+
+.header__search--abs {
+    font-size: 18px;
+    top: 10px;
+    right: 8px;
+}
+
+//.header__status--contract-list {
+//    .header__list--item,
+//    .customer__li--border {
+//        &:not(:last-child) {
+//            margin-right: 30px;
+//        }
+//    }
+//}
+
+.header__status--contract-list li span:hover {
+    color: #462ECA;
+}
+
+.table__contract--color {
+    color: #462ECA;
+}
+
+.table__contract--item-color {
+    color: #4D4B4B;
+    //font-size: 16px;
+
+    &.dashboard__document--name {
+        width: 250px;
+    }
+}
+
+.table__contract--item-color:hover{
+    color: blue;
+}
+
+.table__contract--item-fz {
+    font-size: 15px;
+}
+
+.table__contract--button {
+    background-color: #26186F
+}
+
+.table__contract--button-approved {
+    background-color: #5334F8;
+}
+
+.paginate__contract--active {
+    padding: 0px 6px;
+    background: #5946C0;;
+    color: white;
+    border-radius: 3px;
+    margin: 0px 7px;
+}
+
+
+.button__add--customer {
+    border-radius: 25px;
+    width: 156px;
+    height: 40px;
+}
+
+.contract__add--abs {
+    top: 6px;
+    left: 6px;
+}
+
+.title__contract--text {
+    font-size: 15px;
+    line-height: 20px;
+    color: #4D4B4B;
+}
+
+.create__contract--style {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 28px;
+    display: inline-block;
+    color: #000000;
+    padding: 16px 0 16px 0;
+}
+
+.create__contract--form--fz {
+    font-size: 17px;
+    font-weight: 700;
+    color: #484848 !important;
+}
+
+.create__contract--form--exit
+select.form-control:not([size]):not([multiple]) {
+    height: calc(2.25rem + 4px);
+}
+
+.create__contract--abs {
+    right: 15px;
+    top: 14px;
+}
+
+.create__contract--form--abs1 {
+    cursor: pointer;
+    background: #5442BC;
+    right: 0;
+    top: 0;
+}
+
+.customer__table--img {
+    width: 35px;
+    height: 35px;
+}
+
+.paginate__customer--active {
+    width: 19px;
+    height: 19px;
+    padding: 0px 6px;
+    background: #5946C0;
+    color: white;
+    border-radius: 5px;
+}
+
+.customer__show--sizeText {
+    font-size: 18px
+}
+
+.list__users--bg--button {
+    padding: 7px 8px;
+    background: linear-gradient(180deg, #510EE0 0%, rgba(88, 37, 197, 0.83) 91.15%);
+    cursor: pointer;
+    font-size: 15px;
+    display: inline-block;
+    box-shadow: 0px 2px 10px rgba(255, 117, 85, 0.44);
+}
+
+.list__users--search--icon {
+    left: 8px;
+    top: 27%;
+    color: #828282 !important;
+}
+
+.list__users--search--place::placeholder {
+    color: #C4C4C4;
+}
+
+.list__users--status--color {
+    color: #828282;
+    font-size: 15px;
+}
+
+.list__users--status--border {
+    margin-top: 2px;
+}
+
+.header__status--contract-list li .list__users--status--color:hover {
+    border-bottom: 3px solid #472FC8 !important;
+    padding-bottom: 20px;
+}
+
+.form__search--input {
+    padding-left: 29px;
+}
+
+.list__users--color--text {
+    color: #4D34D6;
+}
+
+.list__users--color--cursor {
+    cursor: pointer;
+}
+
+.list__users--status--color--active {
+    border-bottom: 3px solid #472FC8 !important;
+    padding-bottom: 20px;
+}
+
+.list__users--status--color--active1 {
+    color: #472FC8 !important;
+}
+
+.customer__list--name {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    background: linear-gradient(to right, midnightblue, midnightblue 50%, royalblue 50%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: 100%;
+    transition: background-position 275ms ease;
+
+    &:hover {
+        background-position: 0 100%;
+    }
+}
+
+.modal__contract--bg--header {
+    background: #F0F0F0;
+    border: 1px solid #E3E3E3;
+}
+
+.modal__contract--info--active {
+    color: #696767 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+}
+
+.modal__contract--list-title {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 15px;
+}
+
+.modal__contract--list-size {
+    font-size: 14px;
+    color: #696767;
+    line-height: 20px;
+}
+
+.modal__contract--info--color {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;;
+}
+
+.contract__list--icon--down {
+    bottom: 10px;
+    right: 13px;
+    font-size: 20px;
+    color: #6D6D6D;
+    cursor: pointer;
+}
+
+.contract__list--select--wh {
+    width: 200px;
+    height: 42px !important;
+}
+
+.content__upload--title--top {
+    color: #457BD5;
+    font-size: 15px;
+    line-height: 15px;
+}
+
+.content__upload--title--kb {
+    color: #FBA126;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.content__upload--exp--table {
+    font-size: 12px;
+    Line-height: 20px;
+    color: #BFBFBF;
+}
+
+
+.blade__search--banking {
+    background: white;
+    border: 3px solid #8080801f;
+    box-shadow: 10px 5px 11px;
+    position: absolute;
+    z-index: 1;
+    width: 98%;
+    top: 49px;
+    border-radius: 10px;
+}
+.blade__search--customer {
+    background: white;
+    border: 3px solid #8080801f;
+    box-shadow: 10px 5px 11px;
+    position: absolute;
+    z-index: 1;
+    width: 98%;
+    border-radius: 10px;
+    max-height: 144px;
+}
+.item__data--banking {
+    font-size: 18px;
+    color: #333;
+    font-weight: 600;
+    padding: 10px;
+    border-bottom: 1px solid #8080804a;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tem__data--banking--ky {
+    color: gray;
+    font-weight: 500;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item__data--banking:hover {
+    background: #F0F0F0;
+    border-radius: 5px;
+}
+
+//time line
+
+ul.dashboard__timeline {
+    list-style-type: none;
+    position: relative;
+
+
+
+    li {
+        margin: 20px 0;
+        padding-left: 20px;
+        &:after {
+            content: ' ';
+            background: #d4d9df;
+            display: inline-block;
+            position: absolute;
+            left: 29px;
+            width: 2px;
+            height: 100%;
+            top: 0;
+            z-index: 200;
+        }
+
+        &.dashboard__timeline--active:after {
+            background: #28a745;
+        }
+
+        &:before {
+            content: ' ';
+            background: white;
+            display: inline-block;
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid #28a745;
+            left: 20px;
+            width: 20px;
+            height: 20px;
+            z-index: 400;
+        }
+    }
+}
+
+.custom__container--fluid {
+    .header__create--contact {
+        padding-top: 15px;
+        padding-bottom: 5px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .header__status--contract {
+        .header__status--contract-list {
+            margin-bottom: 0;
+
+            .header__list--item {
+                margin-bottom: 20px;
+                margin-right: 0;
+                text-align: center;
+            }
+        }
+
+        .header__status--search {
+            margin-bottom: 20px;
+
+            .header__input--search {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+
+    .create__contract--form {
+        padding-bottom: 20px;
+    }
+
+    .box__contract--list--end {
+        .header__card--contacts {
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+
+        .content__card--contacts {
+            .box__child--list--contract {
+                .modal__contract--list--contract {
+                    .modal__contract--list--item {
+                        .modal__contract--list-title {
+                            word-break: break-all;
+                        }
+                    }
+                }
+            }
+
+            .button__contract--list--upload {
+                .btn__upload--contacts {
+                    padding: 8px 10px;
+                    background-color: #5442BC;
+                    margin-right: 7px;
+                }
+
+                .btn__upload--sample--contacts {
+                    padding: 8px 10px;
+                    background-color: #5442BC;
+                }
+            }
+        }
+    }
+}
+
+.container__upload--contacts {
+    .content__upload--file--contract {
+        .list__file--parent {
+            .content__upload--file--title {
+                .content__upload--title--top {
+                    word-break: break-all;
+                }
+            }
+        }
+    }
+}
+
+.modal__sample--contacts {
+    .modal-content {
+        .content__upload--file-exp {
+            .content__item-ajax {
+                .content__upload--exp--item {
+                    .custom__size--file {
+                        margin-top: 29px;
+                    }
+
+                    .custom__item--img {
+                        cursor: pointer;
+                        min-width: 50px;
+                        margin-top: 29px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.show__upload--contacts {
+    .modal__contract--list-title {
+        word-break: break-all;
+    }
+}
+
+.btn__action--contacts {
+    width: 130px;
+}
+
+.btn__back--list {
+    color: #5442BC;
+    border: 1px solid #5442BC;
+    padding: 8px 12px;
+}
+
+.btn__submit--contract {
+    background-color: #5442BC;
+    padding: 8px 12px;
+}
+
+.btn__get--information {
+    padding: 9px 20px;
+}
+
+/* subscription wrapper */
+.subscription__panel {
+    padding: 30px 15px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #242424;
+
+    &.completed__option--wrapper {
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .subscription__option--completed {
+        color: #188038;
+        font-size: 28px;
+    }
+
+    .subscription__option--info {
+        border: 3px solid #E0E0E0;
+        padding: 15px;
+        width: 100%;
+
+        legend {
+            width: unset;
+            float: unset;
+            font-size: 20px;
+            font-weight: 600;
+        }
+    }
+
+
+    .subscription__header {
+        padding-bottom: 28px;
+        margin-bottom: 20px;
+        width: 100%;
+        border-bottom: 1px solid #E0E0E0;
+
+        .subscription__header--image {
+            margin-bottom: 10px;
+        }
+
+        .subscription__header--text {
+            max-width: 515px;
+            margin-bottom: 20px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .subscription__header--buttons {
+            display: flex;
+            justify-content: center;
+
+            .btn__subscription--package {
+                border: 1px solid #4D34D6;
+                padding: 7px 20px;
+                border-radius: 9px;
+                margin-right: 30px;
+                color: #4D34D6;
+
+                &:hover, &:active  {
+                    color: $white;
+                    background-color: #4D34D6;
+                }
+            }
+
+            .btn__chat--support {
+                background-color: #4D34D6;
+                border: 1px solid #4D34D6;
+                padding: 7px 20px;
+                color: $white;
+                border-radius: 9px;
+
+                &:hover, &:active {
+                    color: #4D34D6;
+                    background-color: $white;
+                }
+            }
+        }
+    }
+
+    .subscription__packages {
+        width: 100%;
+
+        @media (min-width: 576px) {
+            padding-left: 30px;
+        }
+
+
+        .subscription__package--title {
+            margin-bottom: 25px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 28px;
+        }
+    }
+
+    .table__packages--wrapper {
+        padding-left: 0;
+        padding-right: 0;
+
+        @media (min-width: 576px) {
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+
+        .table-responsive {
+            .table__packages {
+                thead {
+                    color: $white;
+                    background-color: #3B21CD;
+                    font-size: 14px;
+
+                    th {
+                        padding: 20px 10px;
+                    }
+                }
+
+                tbody {
+                    tr {
+                        &.even {
+                            background-color: #E6E9F3;
+                        }
+
+                        td {
+                            padding: 10px;
+                            font-size: 15px;
+                            color: #474747;
+
+                            * {
+                                margin-bottom: 5px;
+                            }
+
+                            .btn__subscription--item {
+                                border: 1px solid #4D34D6;
+                                background: linear-gradient(180deg, #3919B9 0%, #4A21C0 51.04%, #5F27D8 100%);
+                                border-radius: 7px;
+                                color: $white;
+                                padding: 7px 15px;
+
+                                &:hover, &:active, &.btn__subitem--active {
+                                    color: $white;
+                                    border: 1px solid #188038;
+                                    background: #188038;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.btn__close--subscription {
+    background: #F26D21;
+    color: $white;
+    border-radius: 32px;
+    border: 1px solid #F26D21;
+    padding: 5px 25px;
+
+    &:focus {
+        outline: none !important;
+    }
+}
+
+.btn__register_subscription {
+    background: #5442BC;
+    color: $white;
+    border-radius: 32px;
+    border: 1px solid #5442BC;
+    padding: 5px 25px;
+
+    &:focus {
+        outline: none !important;
+    }
+}
+
+/* end subscription wrapper */
+
+@media (min-width: 576px) {
+    .create__contract--style {
+        font-size: 24px;
+    }
+
+    .custom__container--fluid {
+        .header__status--contract {
+            .header__status--contract-list {
+                justify-content: center;
+
+                .header__list--item {
+                    &:not(:last-child) {
+                        margin-right: 30px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .custom__container--fluid {
+        .header__create--contact {
+            justify-content: inherit;
+        }
+
+        .header__status--contract {
+            .header__status--contract-list {
+                justify-content: inherit;
+
+                .header__list--item {
+                    margin-bottom: 15px;
+                }
+            }
+
+            .header__status--search {
+                margin-bottom: 10px;
+            }
+        }
+    }
+
+    .modal__sample--contacts {
+        &.modal-dialog {
+            max-width: 700px;
+
+            .modal-content {
+                .content__upload--search--contract {
+                    .onchange__search {
+                        width: 240px;
+                    }
+                }
+
+                .content__upload--file-exp {
+                    .content__item-ajax {
+                        .content__upload--exp--item {
+                            .content__exp--name--file {
+                                .text__document--name {
+                                    display: inline-block;
+                                    max-width: 290px;
+                                    overflow: hidden;
+                                    white-space: nowrap;
+                                    text-overflow: ellipsis;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 992px) {
+    .modal__sample--contacts {
+        &.modal-dialog {
+            max-width: 900px;
+
+            .modal-content {
+                .content__upload--file-exp {
+                    .content__item-ajax {
+                        .content__upload--exp--item {
+                            .content__exp--name--file {
+                                .text__document--name {
+                                    max-width: 400px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .container__upload--contacts {
+        .content__upload--file--contract {
+            .list__file--parent {
+                .content__upload--file--title {
+                    .content__upload--title--top {
+                        max-width: 130px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@media (min-width: 1200px) {
+    .modal__sample--contacts {
+        &.modal-dialog {
+            max-width: 1140px;
+        }
+    }
+
+    .container__upload--contacts {
+        .content__upload--file--contract {
+            .list__file--parent {
+                .content__upload--file--title {
+                    .content__upload--title--top {
+                        max-width: 190px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 375px) {
+    .subscription__panel {
+        .subscription__header {
+            .subscription__header--buttons
+            {
+                .btn__subscription--package {
+                    margin-right: 20px;
+                    padding: 7px 15px;
+                    font-size: 14px;
+                }
+
+                .btn__chat--support {
+                    padding: 7px 15px;
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+}

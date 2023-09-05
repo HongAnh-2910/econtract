@@ -1,0 +1,358 @@
+@import "variables";
+
+/* login */
+.main-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+}
+.left-container {
+    height: 100vh;
+}
+.text-welcome{
+    font-size: 43px;
+    line-height: 60px;
+    text-align: right;
+    padding: 0px 35px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.exp-welcome {
+    p {
+        font-size: 16px;
+        margin-bottom: 0px;
+        margin-left: 347px;
+    }
+}
+.right-side-title {
+    //padding-top: 50px;
+    //padding-bottom: 80px;
+}
+
+.icon-welcome {
+    height: 100px;
+
+    p {
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+}
+
+ul.list-icon-welcome {
+    list-style: none;
+    margin-bottom: 130px;
+}
+
+ul.list-icon-welcome li {
+    padding: 0 5px;
+}
+
+/* LogIn */
+.right-container-content {
+    width: 325px;
+    margin: 0 auto;
+}
+
+.register-title {
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 36px;
+    color: $auth-title;
+    margin-bottom: 20px;
+}
+
+.register-description {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 25px;
+    color: $auth-description;
+}
+
+.form-control {
+    width: 340px;
+    height: 48px;
+}
+
+.forgot-password {
+    color: #F26D21;
+}
+
+
+.border {
+    width: 124px;
+    height: 1px;
+    top: 1px;
+    left: 0%;
+    right: 0%;
+    top: 100%;
+    bottom: -100%;
+    border: 1px solid #dbdbdb;
+    box-sizing: border-box;
+    border-radius: 4px;
+    transform: matrix(1, 0, 0, -1, 0, 0);
+    margin-top: 30px;
+}
+
+.or-login-by {
+    font-family: Roboto;
+    text-align: center;
+    margin-top: 20px;
+    color: $auth-description;
+}
+
+.remember-me {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 157.69%;
+    color: #828282;
+}
+
+.left-admin {
+    width: 1000px;
+}
+
+// Header
+
+.header-nav {
+    background-color: #ffffff;
+}
+
+.cust-nav-top {
+    font-size: 13px;
+    width: 100%;
+    justify-content: space-around;
+    text-align: center;
+}
+
+li.nav-item.active {
+    border-bottom: 2px solid #f26d21;
+}
+
+.nav-item.cart .icon {
+    position: relative;
+}
+
+.nav-item.cart .icon .amount {
+    width: 20px;
+    height: 20px;
+    background: #ee7d22;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    font-size: 9px;
+    color: #fff;
+    text-align: center;
+    top: -2px;
+    position: absolute;
+    right: -3px;
+    padding-top: 1.5px;
+}
+
+.icon {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.icon-acc {
+    font-size: 20px;
+    padding-left: 13px;
+    color: #828282;
+}
+
+.avatar {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 30px;
+}
+
+.dropdown-cart {
+    font-size: 0.875rem;
+    box-shadow: 6px 4px 20px rgba(0, 0, 0, 0.1);
+    border: 0.3px solid #EDEDED;
+    //max-width: 100%;
+    white-space: normal;
+    border-radius: 5px;
+    overflow: hidden;
+    padding: 0;
+    min-width: 330px !important;
+    margin-top: 1rem;
+
+    .profile-modal-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        padding: 20px;
+
+        .profile-modal-top {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            img {
+                width: 64px;
+                height: 64px;
+                border-radius: 64px;
+                margin-right: 15px;
+            }
+
+            div {
+                .profile-welcome-text {
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 18px;
+                    line-height: 21px;
+
+                    b {
+                        font-weight: bolder;
+                    }
+
+                }
+
+                .profile-trial-text {
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 12px;
+                    line-height: 14px;
+
+                    span {
+                        span {
+                            color: $main-color
+                        }
+                    }
+                }
+            }
+        }
+
+        .profile-modal-bottom {
+            p {
+                a {
+                    color: $auth-description;
+                }
+            }
+
+            .logout-text {
+                color: $auth-description;
+            }
+        }
+    }
+}
+
+.auth__text--fontfamily{
+    font-family: 'Roboto';
+}
+
+li {
+    nav-item.active {
+        border-bottom: 2px solid #f26d21;
+    }
+}
+
+.auth__background--color{
+    width: 100vh;
+    min-height: 100vh;
+    // background-color: #462ECA;
+    background: linear-gradient(45deg, #7763e7, #462ECA);
+}
+
+.auth__overflow--hidden{
+    font-family: Roboto;
+    overflow-x: hidden
+}
+
+.auth__logo--top{
+    top: 0;
+}
+
+.auth__textWelcome--style{
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 60px;
+}
+
+.auth__listIcon--margin{
+    margin-top: 14%;
+}
+
+.auth__icon--two{
+    margin-right: 7%;
+    margin-left: 5%;
+}
+
+.auth__icon--three{
+    margin-right: 4%;
+}
+
+.auth__icon--four{
+    margin-right: 2%;
+}
+
+.auth__text--copyright{
+    bottom:0
+}
+
+.auth__background--circle{
+    // background-color: #0984e3;
+    background: linear-gradient(80deg,#462ECA,  #7763e7);
+    width: 110%;
+    height: 110%;
+    left: -20%;
+    top: 36%;
+    border-radius: 50%;
+}
+
+// css button login
+.auth__button--text{
+    display: block;
+    width: 340px;
+    height: 50px;
+    line-height: 19px;
+    border-radius: 50px;
+    border: 1px solid #462ECA;
+    color: #462ECA;
+    font-size: 16px;
+    font-family: Roboto;
+    font-style: normal;
+    position: relative;
+    background: transparent;
+    transition: all .35s;
+    }
+
+.auth__button--text:before,
+.auth__button--text:after{
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    top: -100%;
+    left: 0;
+    background: #462ECA;
+    z-index: -1;
+    transition: all .35s;
+    }
+
+.auth__button--text:before{
+    opacity: .5;
+    }
+
+.auth__button--text:after{
+    transition-delay: .2s;
+    }
+
+.auth__button--text:hover{
+    color: #fff;
+    }
+
+.auth__button--text:hover:before,
+.auth__button--text:hover:after{
+    top: 0;
+    }
+
