@@ -17,6 +17,7 @@ use App\Models\File;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -56,7 +57,6 @@ class ApplicationController extends Controller
         $countApplications               = $applicationQuery->count();
         $countSoftDelete                 = $applicationQuery->onlyTrashed()->UserApplication(Auth::id())->count();
         $statusApplication               = $this->applicationAction->statusApplicationResponsive($status);
-
         return view("dashboard.application.list", compact(
             'applications',
             'dateTimeOfApplication',
@@ -88,7 +88,7 @@ class ApplicationController extends Controller
         $listIdSelect             = $request->input('value_id');
         $currentUser              = Auth::user();
         $getParentUserOrUserLogin = data_get($currentUser, 'parent_id', $currentUser->id);
-        $users                    = User::with('parent')->whereNotIn('id', [...$listIdSelect])
+        $users                    = User::with('parent')->where('id', '<>' , $listIdSelect)
                                         ->where('id', '<>', Auth::id())
                                         ->WhereByParentUser($getParentUserOrUserLogin)
                                         ->get();

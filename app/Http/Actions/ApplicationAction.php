@@ -5,6 +5,7 @@ namespace App\Http\Actions;
 use App\Mail\Application\SendNotificationMailToClient;
 use App\Models\Application;
 use App\Models\User;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -38,7 +39,7 @@ class ApplicationAction
             config('statuses.rest')      => 5,
             config('statuses.recommend') => 6
         ];
-        return data_get($statusApplicationResponsive ,$status ,0);
+        return Arr::get($statusApplicationResponsive ,is_null($status) ? config('statuses.wait') : $status);
     }
 
     public function listApplications($request)
@@ -89,7 +90,7 @@ class ApplicationAction
 
     public function userApplicationsAjax($id, $valueId)
     {
-        return $this->user::with('parent')->whereNotIn('id', [...$valueId])
+        return $this->user::with('parent')->where('id', '<>' ,$valueId)
             ->where('id', '<>', Auth::id())
             ->WhereByParentUser($id)
             ->get();
