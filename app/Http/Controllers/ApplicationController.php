@@ -121,28 +121,28 @@ class ApplicationController extends Controller
         {
             throw ValidationException::withMessages(['name' => 'Ngày thông tin không tồn tại']);
         }
-        $application = new Application();
-        $randomNumber = rand(0, 99999);
-        $styleNumber = str_pad($randomNumber, 5, '0', STR_PAD_LEFT);
-        $applicationCodeRandom = 'ONESIGN-' . $styleNumber;
-        $application->code = $applicationCodeRandom;
-        $application->name = Auth::user()->name;
-        $application->status = $request->input('status');
-        $application->reason = $request->input('reason');
+        $application                   = new Application();
+        $randomNumber                  = rand(0, 99999);
+        $styleNumber                   = str_pad($randomNumber, 5, '0', STR_PAD_LEFT);
+        $applicationCodeRandom         = 'ONESIGN-'.$styleNumber;
+        $application->code             = $applicationCodeRandom;
+        $application->name             = Auth::user()->name;
+        $application->status           = $request->input('status');
+        $application->reason           = $request->input('reason');
         $application->application_type = $request->input('application_type');
-        $application->department_id = $request->input('department_id');
-        $application->position = $request->input('position');
-        $application->description = $request->input('description');
-        $application->user_id = $request->input('user_id');
+        $application->department_id    = $request->input('department_id');
+        $application->position         = $request->input('position');
+        $application->description      = $request->input('description');
+        $application->user_id          = $request->input('user_id');
         $application->user_application = Auth::id();
-        $application->files = '0';
+        $application->files            = '0';
         $application->save();
         foreach ($request->input('information_day_1') as $key => $value) {
-            DateTimeOfApplication::create([
+            $application->dateTimeOfApplications()->create([
                 'information_day_1' => $value,
-                'information_day_2' => $request->input('information_day_2')[$key],
-                'information_day_3' => $request->input('information_day_3')[$key],
-                'information_day_4' => $request->input('information_day_4')[$key],
+                'information_day_2' => data_get($request->input('information_day_2') , $key),
+                'information_day_3' => data_get($request->input('information_day_3') , $key),
+                'information_day_4' => data_get($request->input('information_day_4') , $key),
                 'application_id' => $application->id,
             ]);
         }
