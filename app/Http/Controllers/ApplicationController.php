@@ -2,22 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendMailDecisionEvent;
+use App\Events\SendMailFollowEvent;
 use App\Exports\ApplicationForProposal;
 use App\Exports\ApplicationsForThoughtExport;
 use App\Http\Actions\ApplicationAction;
 use App\Http\Requests\ApplicationRequest;
 use App\Imports\ApplicationsImport;
+use App\Jobs\SendMailApplication;
 use App\Mail\Application\SendNotificationMailToClient;
 use App\Models\Application;
 use App\Models\DateTimeOfApplication;
 use App\Models\File;
-use App\Models\IpQrcode;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ApplicationController extends Controller
@@ -36,21 +40,23 @@ class ApplicationController extends Controller
 
     public function index(Request $request)
     {
-        $applicationQuery = $this->application->GetUserApplicationOrUser(Auth::id());
-        $considerApplication = User::find(Auth::id())->applicationss;
-        $countRecommend = User::find(Auth::id())->applicationss->where('application_type', config('statuses.rest'))->count();
-        $countRest = User::find(Auth::id())->applicationss->where('application_type', config('statuses.rest'))->count();
-        $applications = $this->applicationAction->listApplications($request);
-        $dateTimeOfApplication = DateTimeOfApplication::all();
-        $customerStatusIsWaiting = $applicationQuery->StatusApplication(config('statuses.wait'))->count();
-        $customerStatusIsApproved = $this->applicationAction->customerStatusIsApprovedCount();
-        $customerStatusIsCancel = $this->applicationAction->customerStatusIsCancelCount();
-        $customerApplicationType = $this->applicationAction->customerApplicationTypeCount();
-        $customerApplicationTypeProposal = $this->applicationAction->customerApplicationTypeProposal();
-        $countApplications = $this->applicationAction->countApplications();
-        $countSoftDelete = $this->applicationAction->countSoftDelete();
-        $statusApplication = $this->applicationAction->statusApplicationResponsive($request);
-
+        $status = $request->input('status');
+        $applicationQuery                = $this->application->GetUserApplicationOrUser(Auth::id());
+        $considerApplication             = User::find(Auth::id())->applicationss;
+        $countRecommend                  = User::find(Auth::id())->applicationss->where('application_type',
+            config('statuses.rest'))->count();
+        $countRest                       = User::find(Auth::id())->applicationss->where('application_type',
+            config('statuses.rest'))->count();
+        $applications                    = $this->applicationAction->listApplications($request);
+        $dateTimeOfApplication           = DateTimeOfApplication::all();
+        $customerStatusIsWaiting         = $applicationQuery->StatusApplication(config('statuses.wait'))->count();
+        $customerStatusIsApproved        = $applicationQuery->StatusApplication(config('statuses.approved'))->count();
+        $customerStatusIsCancel          = $applicationQuery->StatusApplication(config('statuses.not'))->count();
+        $customerApplicationType         = $applicationQuery->TypeApplication(config('statuses.rest'))->count();
+        $customerApplicationTypeProposal = $applicationQuery->TypeApplication(config('statuses.recommend'))->count();
+        $countApplications               = $applicationQuery->count();
+        $countSoftDelete                 = $applicationQuery->onlyTrashed()->UserApplication(Auth::id())->count();
+        $statusApplication               = $this->applicationAction->statusApplicationResponsive($status);
         return view("dashboard.application.list", compact(
             'applications',
             'dateTimeOfApplication',
@@ -68,124 +74,122 @@ class ApplicationController extends Controller
         ));
     }
 
-    public function create(Request $request)
+    public function create()
     {
         $currentUser = Auth::user();
-        $id = $currentUser->parent_id ? $currentUser->parent_id : $currentUser->id;
-        $users = User::with('parent')->where(
-            'parent_id', $id
-        )->get();
+        $getParentUserOrUserLogin = data_get($currentUser ,'parent_id' ,$currentUser->id);
+        $users = User::with('parent')->WhereByParentUser($getParentUserOrUserLogin)->get();
 
         return view("dashboard.application.add", compact('users'));
     }
 
     public function changeUserWord(Request $request)
     {
-        $listIdSelect = $request->value_id;
-        $currentUser = Auth::user();
-        $id = $currentUser->parent_id ? $currentUser->parent_id : $currentUser->id;
-        $users = User::with('parent')->whereNotIn('id', ["$request->value_id"])
-            ->where([
-                ['parent_id', $id],
-                ['id', '<>', Auth::id()]
-            ])->get();
+        $listIdSelect             = $request->input('value_id');
+        $currentUser              = Auth::user();
+        $getParentUserOrUserLogin = data_get($currentUser, 'parent_id', $currentUser->id);
+        $users                    = User::with('parent')->where('id', '<>' , $listIdSelect)
+                                        ->where('id', '<>', Auth::id())
+                                        ->WhereByParentUser($getParentUserOrUserLogin)
+                                        ->get();
 
         return view('dashboard.application.listConsiderWord', compact('users', 'listIdSelect'));
     }
 
     public function changeUserWordCheck(Request $request)
     {
-        $listIdSelect = $request->value_id;
-        $currentUser = Auth::user();
-        $id = $currentUser->parent_id ? $currentUser->parent_id : $currentUser->id;
-        $users = $this->applicationAction->userApplicationsAjax($id, $request);
-
+        $listIdSelect = $request->input('value_id');
+        $currentUser  = Auth::user();
+        $id           = data_get($currentUser, 'parent_id', $currentUser->id);
+        $users        = $this->applicationAction->userApplicationsAjax($id, $listIdSelect);
         return view('dashboard.application.listCheckWord', compact('users', 'listIdSelect'));
     }
 
     public function createProposal()
     {
         $currentUser = Auth::user();
-        $id = $currentUser->parent_id ? $currentUser->parent_id : $currentUser->id;
-        $users = User::with('parent')->where(
-            'parent_id', $id
-        )->get();
+        $id          = data_get($currentUser, 'parent_id', $currentUser->id);
+        $users       = User::with('parent')->WhereByParentUser($id)->get();
 
         return view("dashboard.application.addProposal", compact('users'));
     }
 
     public function store(ApplicationRequest $request)
     {
-        if ($request->input('information_day_1')) {
-            $application = new Application();
-            $randomNumber = rand(0, 99999);
-            $styleNumber = str_pad($randomNumber, 5, '0', STR_PAD_LEFT);
-            $applicationCodeRandom = 'ONESIGN-' . $styleNumber;
-            $application->code = $applicationCodeRandom;
-            $application->name = Auth::user()->name;
-            $application->status = $request->input('status');
-            $application->reason = $request->input('reason');
-            $application->application_type = $request->input('application_type');
-            $application->department_id = $request->input('department_id');
-            $application->position = $request->input('position');
-            $application->description = $request->input('description');
-            $application->user_id = $request->input('user_id');
-            $application->user_application = Auth::id();
-            $application->files = '0';
-            $application->save();
-            foreach ($request->input('information_day_1') as $key => $value) {
-                DateTimeOfApplication::create([
-                    'information_day_1' => $value,
-                    'information_day_2' => $request->input('information_day_2')[$key],
-                    'information_day_3' => $request->input('information_day_3')[$key],
-                    'information_day_4' => $request->input('information_day_4')[$key],
-                    'application_id' => $application->id,
-                ]);
-            }
-            $application->users()->sync($request->user_consider);
-
-            if ($request->hasFile('files')) {
-                $files = $request->file('files');
-                $application->update([
-                    'files' => '1'
-                ]);
-                foreach ($files as $file) {
-                    $fileSize = $file->getSize();
-                    $fileSizeByKb = number_format($fileSize / 1024, 2);
-                    $fileName = uniqid() . '_' . $file->getClientOriginalName();
-                    $file->move(base_path('storage/applications'), $fileName);
-                    $newFile = File::create([
-                        'name' => $fileName,
-                        'path' => $fileName,
-                        'type' => $file->getClientOriginalExtension(),
-                        'created_at' => Carbon::now(),
-                        'user_id' => Auth::id(),
-                        'size' => $fileSizeByKb,
-                        'upload_st' => 'upload_applications',
-                    ]);
-                    $application->files()->syncWithoutDetaching([$newFile->id]);
-                }
-            }
-            event(new SendMailDecision($request->user_id , $application));
-            event(new SendMailFollow($request->user_consider , $application));
-//            $this->applicationAction->sendMailDecision($request->user_id, $application->id);
-//            $this->applicationAction->sendMailFollow($request->user_consider, $application->id);
-
-            Session::flash('message_application', 'Bạn đã thêm đơn từ thành công');
-
-            return redirect()->route('web.applications.index');
+        $informationDayOne = $request->input('information_day_1');
+        if (!isset($informationDayOne))
+        {
+            throw ValidationException::withMessages(['name' => 'Ngày thông tin không tồn tại']);
         }
+        $application                   = new Application();
+        $randomNumber                  = rand(0, 99999);
+        $styleNumber                   = str_pad($randomNumber, 5, '0', STR_PAD_LEFT);
+        $applicationCodeRandom         = 'ONESIGN-'.$styleNumber;
+        $application->code             = $applicationCodeRandom;
+        $application->name             = Auth::user()->name;
+        $application->status           = $request->input('status');
+        $application->reason           = $request->input('reason');
+        $application->application_type = $request->input('application_type');
+        $application->department_id    = $request->input('department_id');
+        $application->position         = $request->input('position');
+        $application->description      = $request->input('description');
+        $application->user_id          = $request->input('user_id');
+        $application->user_application = Auth::id();
+        $application->files            = '0';
+        $application->save();
+        foreach ($request->input('information_day_1') as $key => $value) {
+            $application->dateTimeOfApplications()->create([
+                'information_day_1' => $value,
+                'information_day_2' => data_get($request->input('information_day_2') , $key),
+                'information_day_3' => data_get($request->input('information_day_3') , $key),
+                'information_day_4' => data_get($request->input('information_day_4') , $key),
+                'application_id' => $application->id,
+            ]);
+        }
+        $application->users()->sync($request->user_consider);
+
+        if ($request->hasFile('files')) {
+            $files = $request->file('files');
+            $application->update([
+                'files' => '1'
+            ]);
+            foreach ($files as $file) {
+                $fileSize = $file->getSize();
+                $fileSizeByKb = number_format($fileSize / 1024, 2);
+                $fileName = uniqid() . '_' . $file->getClientOriginalName();
+                $file->move(base_path('storage/applications'), $fileName);
+                $newFile = File::create([
+                    'name' => $fileName,
+                    'path' => $fileName,
+                    'type' => $file->getClientOriginalExtension(),
+                    'created_at' => Carbon::now(),
+                    'user_id' => Auth::id(),
+                    'size' => $fileSizeByKb,
+                    'upload_st' => 'upload_applications',
+                ]);
+                $application->files()->syncWithoutDetaching([$newFile->id]);
+            }
+        }
+        if (!$request->user_id || !$request->user_consider)
+        {
+            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
+        }
+        event(new SendMailDecisionEvent($application));
+        event(new SendMailFollowEvent($application));
+
+        Session::flash('message_application', 'Bạn đã thêm đơn từ thành công');
+
+        return redirect()->route('web.applications.index');
     }
 
-    public function sendMailReturn(Request $request, $id)
+    public function sendMailReturn($id)
     {
         $emailUser = User::find($id)->email;
         $applications = [
             'title' => 'Đơn từ của OneSign',
             'body' => 'Đang có phần đơn từ cần bạn xét duyệt!'
         ];
-
-        Mail::to($emailUser)->send(new SendNotificationMailToClient($applications));
+        SendMailApplication::dispatch($emailUser , $applications)->onQueue('mail');
         Session::flash('message_application', 'Bạn đã gửi lại email thành công');
 
         return redirect()->route('web.applications.index');
@@ -267,9 +271,12 @@ class ApplicationController extends Controller
                 $application->files()->syncWithoutDetaching([$newFile->id]);
             }
         }
-
-        $this->applicationAction->sendMailDecision($request->user_id, $application->id);
-        $this->applicationAction->sendMailFollow($request->user_consider, $application->id);
+        if (!$request->user_id || !$request->user_consider)
+        {
+            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
+        }
+        event(new SendMailDecisionEvent($application));
+        event(new SendMailFollowEvent($application));
 
 
         Session::flash('message_application', 'Bạn đã thêm đơn từ thành công');
@@ -322,8 +329,12 @@ class ApplicationController extends Controller
             ]);
         }
         $application->users()->sync($request->user_consider);
-        $this->applicationAction->sendMailDecision($request->user_id, $application->id);
-        $this->applicationAction->sendMailFollow($request->user_consider, $application->id);
+        if (!$request->user_id || !$request->user_consider)
+        {
+            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
+        }
+        event(new SendMailDecisionEvent($application));
+        event(new SendMailFollowEvent($application));
 
         return redirect()->route('web.applications.index')->with('message_application', 'Bạn đã sửa đơn từ thành công');
     }
@@ -335,8 +346,13 @@ class ApplicationController extends Controller
         $application->save();
         $application->users()->sync($request->user_consider);
 
-        $this->applicationAction->sendMailDecision($request->user_id, $application->id);
-        $this->applicationAction->sendMailFollow($request->user_consider, $application->id);
+        if (!$request->user_id || !$request->user_consider)
+        {
+            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
+        }
+
+        event(new SendMailDecisionEvent($application));
+        event(new SendMailFollowEvent($application));
 
 
         return redirect()->route('web.applications.index')->with('message_application', 'Bạn đã sửa đơn đề nghị thành công');
@@ -437,68 +453,6 @@ class ApplicationController extends Controller
     {
         $applications = $this->applicationAction->listApplications($request);
         return view('dashboard.application.searchApplication', compact('applications'));
-    }
-
-    public function testQrCodeActive(Request $request, $id)
-    {
-        $getQr = IpQrcode::where('user_id', $id)->first();
-        $userCheck = User::where('id', Auth::id())->first();
-        $hour = Carbon::now('Asia/Ho_Chi_Minh')->hour;
-        $min = Carbon::now('Asia/Ho_Chi_Minh')->minute;
-        $dayCover = '';
-        if ($hour <= 9) {
-            $dayCover = 'Sáng';
-        } elseif ($hour > 9 && $hour <= 13) {
-            $dayCover = 'Trưa';
-        } elseif ($hour > 13 && $hour <= 18) {
-            $dayCover = 'Chiều';
-        } elseif ($hour > 18 && $hour <= 21) {
-            $dayCover = 'Tối';
-        } elseif ($hour > 21) {
-            $dayCover = 'Đêm';
-        }
-        $success = $hour . ':' . $min;
-        if ($getQr->ip_network == $request->ip()) {
-            return [$userCheck->name, $success, $dayCover];
-        }
-
-        return "địa chỉ ip không trung khớp vs cty";
-    }
-
-    public function testQrCode(Request $request)
-    {
-        $userIdQr = IpQrcode::where('user_id', Auth::id())->first();
-        $userParent = User::where('id', Auth::id())->first()->parent;
-
-        $usersa = IpQrcode::where('user_id', $userParent->id ?? '')->first();
-        $userActiveQr = User::where('id', Auth::id())->where('parent_id', null)->first();
-        if ($userActiveQr) {
-            $userActiveQr1 = User::where('id', Auth::id())->where('parent_id', null)->first();
-        } else {
-            $userActiveQr1 = User::where('id', Auth::id())->first()->parent;
-        }
-
-        return \view('dashboard.qrcode.testQr', compact('userActiveQr', 'userActiveQr1', 'userIdQr', 'usersa'));
-    }
-
-    public function createQrCode(Request $request)
-    {
-        $qrActive = IpQrcode::where('user_id', Auth::id())->first();
-        if ($qrActive) {
-            $isSuccess = IpQrcode::where('user_id', Auth::id())->update([
-                'ip_network' => $request->ip(),
-                'user_id' => Auth::id()
-            ]);
-            return $isSuccess ? redirect()->back()->with('error_message', 'qr code da duoc tao truoc do') : '';
-
-        } else {
-            $isSuccess = IpQrcode::create([
-                'ip_network' => $request->ip(),
-                'user_id' => Auth::id()
-            ]);
-
-            return $isSuccess ? redirect()->back()->with('message', 'Ban da tao qr code thanh cong') : '';
-        }
     }
 
 }

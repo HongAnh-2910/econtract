@@ -156,4 +156,15 @@ class User extends Authenticatable
             return asset('images/admin.png');
         }
     }
+
+    /**
+     * @param $query
+     * @param $userId
+     * @return mixed
+     */
+
+    public function scopeWhereByParentUser($query , $userId)
+    {
+        return $query->where('parent_id', $userId);
+    }
 }

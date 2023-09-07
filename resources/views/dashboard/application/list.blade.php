@@ -499,9 +499,15 @@
                                             $informationDays = $application->dateTimeOfApplications;
                                             $countDay = 0;
                                             foreach ($informationDays as $informationDay) {
-                                                $to_date = Illuminate\Support\Carbon::createFromFormat('Y-m-d H:s:i', $informationDay->information_day_2);
-                                                $from_date = Illuminate\Support\Carbon::createFromFormat('Y-m-d H:s:i', $informationDay->information_day_4);
-                                                $countDay += $to_date->diffInDays($from_date);
+                                                if ($informationDay->information_day_2 == $informationDay->information_day_4 && $informationDay->information_day_1 ==  $informationDay->information_day_3)
+                                                    {
+                                                        $countDay+=0.5;
+                                                    }else
+                                                    {
+                                                       $to_date = Illuminate\Support\Carbon::createFromFormat('Y-m-d H:s:i', $informationDay->information_day_2);
+                                                       $from_date = Illuminate\Support\Carbon::createFromFormat('Y-m-d H:s:i', $informationDay->information_day_4);
+                                                       $countDay += ($to_date->diffInDays($from_date) + 1);
+                                                    }
                                             }
                                             echo $countDay . ' Ngày';
                                         @endphp

@@ -67,7 +67,7 @@ class Customer extends Model
      * @param string $search
      * @return mixed
      */
-    public function scopeIsSearchName($query , string $search)
+    public function scopeIsSearchName($query , $search)
     {
         if (!empty($search))
         {
