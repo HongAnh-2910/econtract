@@ -9,11 +9,11 @@ use App\Exports\ApplicationsForThoughtExport;
 use App\Http\Actions\ApplicationAction;
 use App\Http\Requests\ApplicationRequest;
 use App\Imports\ApplicationsImport;
+use App\Jobs\SendMailApplication;
 use App\Mail\Application\SendNotificationMailToClient;
 use App\Models\Application;
 use App\Models\DateTimeOfApplication;
 use App\Models\File;
-use App\Models\IpQrcode;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -117,7 +117,7 @@ class ApplicationController extends Controller
     public function store(ApplicationRequest $request)
     {
         $informationDayOne = $request->input('information_day_1');
-        if (!$informationDayOne)
+        if (!isset($informationDayOne))
         {
             throw ValidationException::withMessages(['name' => 'Ngày thông tin không tồn tại']);
         }
@@ -170,23 +170,26 @@ class ApplicationController extends Controller
                 $application->files()->syncWithoutDetaching([$newFile->id]);
             }
         }
-        event(new SendMailDecisionEvent($request->user_id ,$application));
-        event(new SendMailFollowEvent($request->user_consider , $application));
+        if (!$request->user_id || !$request->user_consider)
+        {
+            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
+        }
+        event(new SendMailDecisionEvent($application));
+        event(new SendMailFollowEvent($application));
 
         Session::flash('message_application', 'Bạn đã thêm đơn từ thành công');
 
         return redirect()->route('web.applications.index');
     }
 
-    public function sendMailReturn(Request $request, $id)
+    public function sendMailReturn($id)
     {
         $emailUser = User::find($id)->email;
         $applications = [
             'title' => 'Đơn từ của OneSign',
             'body' => 'Đang có phần đơn từ cần bạn xét duyệt!'
         ];
-
-        Mail::to($emailUser)->send(new SendNotificationMailToClient($applications));
+        SendMailApplication::dispatch($emailUser , $applications)->onQueue('mail');
         Session::flash('message_application', 'Bạn đã gửi lại email thành công');
 
         return redirect()->route('web.applications.index');
@@ -268,9 +271,12 @@ class ApplicationController extends Controller
                 $application->files()->syncWithoutDetaching([$newFile->id]);
             }
         }
-
-        event(new SendMailDecisionEvent($request->user_id ,$application));
-        event(new SendMailFollowEvent($request->user_consider , $application));
+        if (!$request->user_id || !$request->user_consider)
+        {
+            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
+        }
+        event(new SendMailDecisionEvent($application));
+        event(new SendMailFollowEvent($application));
 
 
         Session::flash('message_application', 'Bạn đã thêm đơn từ thành công');
@@ -323,8 +329,12 @@ class ApplicationController extends Controller
             ]);
         }
         $application->users()->sync($request->user_consider);
-        event(new SendMailDecisionEvent($request->user_id ,$application));
-        event(new SendMailFollowEvent($request->user_consider , $application));
+        if (!$request->user_id || !$request->user_consider)
+        {
+            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
+        }
+        event(new SendMailDecisionEvent($application));
+        event(new SendMailFollowEvent($application));
 
         return redirect()->route('web.applications.index')->with('message_application', 'Bạn đã sửa đơn từ thành công');
     }
@@ -336,8 +346,13 @@ class ApplicationController extends Controller
         $application->save();
         $application->users()->sync($request->user_consider);
 
-        event(new SendMailDecisionEvent($request->user_id ,$application));
-        event(new SendMailFollowEvent($request->user_consider , $application));
+        if (!$request->user_id || !$request->user_consider)
+        {
+            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
+        }
+
+        event(new SendMailDecisionEvent($application));
+        event(new SendMailFollowEvent($application));
 
 
         return redirect()->route('web.applications.index')->with('message_application', 'Bạn đã sửa đơn đề nghị thành công');
@@ -438,68 +453,6 @@ class ApplicationController extends Controller
     {
         $applications = $this->applicationAction->listApplications($request);
         return view('dashboard.application.searchApplication', compact('applications'));
-    }
-
-    public function testQrCodeActive(Request $request, $id)
-    {
-        $getQr = IpQrcode::where('user_id', $id)->first();
-        $userCheck = User::where('id', Auth::id())->first();
-        $hour = Carbon::now('Asia/Ho_Chi_Minh')->hour;
-        $min = Carbon::now('Asia/Ho_Chi_Minh')->minute;
-        $dayCover = '';
-        if ($hour <= 9) {
-            $dayCover = 'Sáng';
-        } elseif ($hour > 9 && $hour <= 13) {
-            $dayCover = 'Trưa';
-        } elseif ($hour > 13 && $hour <= 18) {
-            $dayCover = 'Chiều';
-        } elseif ($hour > 18 && $hour <= 21) {
-            $dayCover = 'Tối';
-        } elseif ($hour > 21) {
-            $dayCover = 'Đêm';
-        }
-        $success = $hour . ':' . $min;
-        if ($getQr->ip_network == $request->ip()) {
-            return [$userCheck->name, $success, $dayCover];
-        }
-
-        return "địa chỉ ip không trung khớp vs cty";
-    }
-
-    public function testQrCode(Request $request)
-    {
-        $userIdQr = IpQrcode::where('user_id', Auth::id())->first();
-        $userParent = User::where('id', Auth::id())->first()->parent;
-
-        $usersa = IpQrcode::where('user_id', $userParent->id ?? '')->first();
-        $userActiveQr = User::where('id', Auth::id())->where('parent_id', null)->first();
-        if ($userActiveQr) {
-            $userActiveQr1 = User::where('id', Auth::id())->where('parent_id', null)->first();
-        } else {
-            $userActiveQr1 = User::where('id', Auth::id())->first()->parent;
-        }
-
-        return \view('dashboard.qrcode.testQr', compact('userActiveQr', 'userActiveQr1', 'userIdQr', 'usersa'));
-    }
-
-    public function createQrCode(Request $request)
-    {
-        $qrActive = IpQrcode::where('user_id', Auth::id())->first();
-        if ($qrActive) {
-            $isSuccess = IpQrcode::where('user_id', Auth::id())->update([
-                'ip_network' => $request->ip(),
-                'user_id' => Auth::id()
-            ]);
-            return $isSuccess ? redirect()->back()->with('error_message', 'qr code da duoc tao truoc do') : '';
-
-        } else {
-            $isSuccess = IpQrcode::create([
-                'ip_network' => $request->ip(),
-                'user_id' => Auth::id()
-            ]);
-
-            return $isSuccess ? redirect()->back()->with('message', 'Ban da tao qr code thanh cong') : '';
-        }
     }
 
 }

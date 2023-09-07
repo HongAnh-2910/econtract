@@ -18,14 +18,13 @@ class ApplicationEventSubscriber
 
     public function handleSendMailDecision($event)
     {
-        $userId      = $event->getUserId();
         $application = $event->getApplicationModel();
+        $application = $application->GetByIdApplication($application->id)->with('user')->first();
         $contentMail = [
             'title' => 'Đơn từ của OneSign',
             'body'  => 'Đang có phần đơn từ cần bạn xét duyệt!',
-            'type'  => 'decision'
         ];
-        SendMailApplication::dispatch($userId, $application , $contentMail)->onQueue('mail');
+        SendMailApplication::dispatch(data_get($application->user , 'email') , $contentMail)->onQueue('mail');
     }
 
     /**
@@ -35,14 +34,15 @@ class ApplicationEventSubscriber
 
     public function handleSendMailFollow($event)
     {
-        $userId      = $event->getUserId();
         $application = $event->getApplicationModel();
+        $application = $application->GetByIdApplication($application->id)->with('users')->first();
         $contentMail = [
             'title' => 'Đơn từ của OneSign',
             'body'  => 'Đang có phần đơn từ cần bạn xem xét!',
-            'type'  => 'follow'
         ];
-        SendMailApplication::dispatch($userId, $application , $contentMail)->onQueue('mail');
+        $application->users->each(function ($user) use ($contentMail) {
+            SendMailApplication::dispatch($user->email , $contentMail)->onQueue('mail');
+        });
     }
 
     /**

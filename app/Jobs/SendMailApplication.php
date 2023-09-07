@@ -17,13 +17,11 @@ class SendMailApplication implements ShouldQueue
     /**
      * @var
      */
-    private $userId;
+    private $email;
 
     /**
-     * @var
+     * @var array
      */
-
-    private $application;
 
     private $contentMail;
     /**
@@ -36,10 +34,9 @@ class SendMailApplication implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($userId , Application $application , array $contentMail)
+    public function __construct($email ,array $contentMail)
     {
-        $this->userId      = $userId;
-        $this->application = $application;
+        $this->email      = $email;
         $this->contentMail = $contentMail;
     }
 
@@ -50,15 +47,16 @@ class SendMailApplication implements ShouldQueue
      */
     public function handle()
     {
-        $type        = data_get($this->contentMail, 'type');
-        $application = $this->application->GetByIdApplication($this->application->id)
-                                         ->with('user', 'users')
-                                         ->first();
-        if ($type === 'decision') {
-            Mail::to($application->user->email)->send(new SendNotificationMailToClient($this->contentMail));
-        }
-        $application->users->each(function ($user) {
-            Mail::to($user->email)->send(new SendNotificationMailToClient($this->contentMail));
-        });
+//        $type        = data_get($this->contentMail, 'type');
+//        $application = $this->application->GetByIdApplication($this->application->id)
+//                                         ->with('user', 'users')
+//                                         ->first();
+        Mail::to($this->email)->send(new SendNotificationMailToClient($this->contentMail));
+//        if ($type === 'decision') {
+//            Mail::to($application->user->email)->send(new SendNotificationMailToClient($this->contentMail));
+//        }
+//        $application->users->each(function ($user) {
+//            Mail::to($user->email)->send(new SendNotificationMailToClient($this->contentMail));
+//        });
     }
 }

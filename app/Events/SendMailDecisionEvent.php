@@ -15,10 +15,6 @@ class SendMailDecisionEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * @var
-     */
-    private $userId;
 
     /**
      * @var
@@ -30,18 +26,9 @@ class SendMailDecisionEvent
      *
      * @return void
      */
-    public function __construct($userId , Application $application)
+    public function __construct(Application $application)
     {
-        $this->userId = $userId;
         $this->application = $application;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUserId()
-    {
-        return $this->userId;
     }
 
     public function getApplicationModel()

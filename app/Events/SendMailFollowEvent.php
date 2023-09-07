@@ -18,11 +18,6 @@ class SendMailFollowEvent
     /**
      * @var
      */
-    private $userId;
-
-    /**
-     * @var
-     */
 
     private $application;
 
@@ -31,19 +26,11 @@ class SendMailFollowEvent
      *
      * @return void
      */
-    public function __construct($userId , Application $application)
+    public function __construct(Application $application)
     {
-        $this->userId      = $userId;
         $this->application = $application;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
 
     /**
      * @return mixed
