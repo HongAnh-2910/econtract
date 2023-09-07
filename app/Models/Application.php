@@ -136,7 +136,7 @@ class Application extends Model
     public function scopeGetUserApplicationOrUser($query , $userId)
     {
        return $query->where(function ($query) use($userId) {
-            $query->where('user_application' , $userId);
+            $query->UserApplication($userId);
             $query->orWhere('user_id' , $userId);
         });
     }
@@ -160,6 +160,17 @@ class Application extends Model
     public function scopeTypeApplication($query , $type)
     {
         return $query->where('application_type' ,$type);
+    }
+
+    /**
+     * @param $query
+     * @param $user
+     * @return mixed
+     */
+
+    public function scopeUserApplication($query, $user)
+    {
+        return $query->where('user_application' , $user);
     }
 
 }
