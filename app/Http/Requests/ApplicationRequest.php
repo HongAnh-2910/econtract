@@ -32,14 +32,21 @@ class ApplicationRequest extends FormRequest
         ];
     }
 
+    public function attributes()
+    {
+       return [
+           'reason'            => 'Lý do',
+           'information_day_1' => 'Ca làm 1',
+           'information_day_3' => 'Ca làm 2',
+           'description'       => 'Mô tả',
+           'user_id'           => 'Người kiểm duyệt'
+       ];
+    }
+
     public function messages()
     {
         return [
-            'reason.*'            => 'Lý do không được để trống.',
-            'information_day_1.*' => 'Ca làm không được để trống.',
-            'information_day_3.*' => 'Ca làm không được để trống.',
-            'description.*'       => 'Mô tả không được để trống.',
-            'user_id.required'    => "Người kiểm duyệt không được để trống"
+            'required'            => ':attribute không được để trống.',
         ];
     }
 }

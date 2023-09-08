@@ -244,28 +244,6 @@
                             }
                         });
                     </script>
-{{-- slider_status--}}
-{{--                    <div id="carouselExampleControls" class="carousel slide" data-pause="false" data-ride="false">--}}
-{{--                        <div class="carousel-inner">--}}
-{{--                            <div class="carousel-item active">--}}
-{{--                                sdasdasdas--}}
-{{--                            </div>--}}
-{{--                            <div class="carousel-item">--}}
-{{--                                ádadad--}}
-{{--                            </div>--}}
-{{--                            <div class="carousel-item">--}}
-{{--                                ádasd--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <a class="carousel-control-prev text-dark" href="#carouselExampleControls" role="button" data-slide="prev">--}}
-{{--                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>--}}
-{{--                            <span class="sr-only">Previous</span>--}}
-{{--                        </a>--}}
-{{--                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">--}}
-{{--                            <span class="carousel-control-next-icon" aria-hidden="true"></span>--}}
-{{--                            <span class="sr-only">Next</span>--}}
-{{--                        </a>--}}
-{{--                    </div>--}}
                     <div class="col-md-3 px-0 col-12 d-flex justify-content-center justify-content-md-end">
 
                         <div class="dropdown">
@@ -281,16 +259,6 @@
                                    href="{{ route('web.applications.exportApplicationForProposalExcel') }}">Đơn đề nghị</a>
                             </div>
                         </div>
-
-                        {{-- <a class="m-3 text-center" href="{{ route('application.exportExcel') }}">
-                            <img src="{{ asset('images/Export.png') }}" alt="export.png">
-                            <div>Export</div>
-                        </a> --}}
-                        {{-- <a class="m-3 text-center" type="button" data-bs-toggle="modal"
-                            data-bs-target="#application__modal--importFile" class="dropdown-item">
-                            <img src="{{ asset('images/Import.png') }}" alt="import.png">
-                            <div>Import</div>
-                        </a> --}}
                         <a class="m-3 text-center" href="{{ route('web.profile.index') }}">
                             <img src="{{ asset('images/setting.png') }}" alt="import.png">
                             <div>Cài đặt</div>

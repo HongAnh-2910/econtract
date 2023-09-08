@@ -116,11 +116,6 @@ class ApplicationController extends Controller
 
     public function store(ApplicationRequest $request)
     {
-        $informationDayOne = $request->input('information_day_1');
-        if (!isset($informationDayOne))
-        {
-            throw ValidationException::withMessages(['name' => 'Ngày thông tin không tồn tại']);
-        }
         $application                   = new Application();
         $randomNumber                  = rand(0, 99999);
         $styleNumber                   = str_pad($randomNumber, 5, '0', STR_PAD_LEFT);
@@ -137,22 +132,24 @@ class ApplicationController extends Controller
         $application->user_application = Auth::id();
         $application->files            = '0';
         $application->save();
+        $createDateTimeApplications = [];
         foreach ($request->input('information_day_1') as $key => $value) {
-            $application->dateTimeOfApplications()->create([
+            $createDateTimeApplications[] = [
                 'information_day_1' => $value,
-                'information_day_2' => data_get($request->input('information_day_2') , $key),
-                'information_day_3' => data_get($request->input('information_day_3') , $key),
-                'information_day_4' => data_get($request->input('information_day_4') , $key),
-                'application_id' => $application->id,
-            ]);
+                'information_day_2' => data_get($request->input('information_day_2'), $key),
+                'information_day_3' => data_get($request->input('information_day_3'), $key),
+                'information_day_4' => data_get($request->input('information_day_4'), $key),
+                'application_id'    => $application->id,
+            ];
         }
+        $application->dateTimeOfApplications()->createMany($createDateTimeApplications);
         $application->users()->sync($request->user_consider);
-
         if ($request->hasFile('files')) {
             $files = $request->file('files');
             $application->update([
                 'files' => '1'
             ]);
+            $arrayFileApplicationId = [];
             foreach ($files as $file) {
                 $fileSize = $file->getSize();
                 $fileSizeByKb = number_format($fileSize / 1024, 2);
@@ -167,12 +164,9 @@ class ApplicationController extends Controller
                     'size' => $fileSizeByKb,
                     'upload_st' => 'upload_applications',
                 ]);
-                $application->files()->syncWithoutDetaching([$newFile->id]);
+                $arrayFileApplicationId[] = $newFile->id;
             }
-        }
-        if (!$request->user_id || !$request->user_consider)
-        {
-            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
+            $application->files()->syncWithoutDetaching($arrayFileApplicationId);
         }
         event(new SendMailDecisionEvent($application));
         event(new SendMailFollowEvent($application));
@@ -211,40 +205,23 @@ class ApplicationController extends Controller
 
         $application = new Application();
 
-        $randomNumber = rand(0, 99999);
-        $styleNumber = str_pad($randomNumber, 5, '0', STR_PAD_LEFT);
-        $applicationCodeRandom = 'ONESIGN-' . $styleNumber;
-        $application->code = $applicationCodeRandom;
-        $application->name = Auth::user()->name;
-        $application->status = $request->input('status');
-        $application->application_type = $request->input('application_type');
-        $application->position = $request->input('position');
-        $application->reason = $request->input('reason');
-        $application->proposal_name = $request->input('proposal_name');
-        $application->proponent = $request->input('proponent');
-
-        $application->code = $applicationCodeRandom;
-        $application->name = Auth::user()->name;
-        $application->status = $request->input('status');
-        $application->application_type = $request->input('application_type');
-        $application->position = $request->input('position');
-        $application->reason = $request->input('reason');
-        $application->proposal_name = $request->input('proposal_name');
-        $application->proponent = $request->input('proponent');
-        $application->code = $applicationCodeRandom;
-        $application->name = Auth::user()->name;
-        $application->status = $request->input('status');
-        $application->application_type = $request->input('application_type');
-        $application->position = $request->input('position');
-        $application->reason = $request->input('reason');
-        $application->proposal_name = $request->input('proposal_name');
-        $application->proponent = $request->input('proponent');
+        $randomNumber                     = rand(0, 99999);
+        $styleNumber                      = str_pad($randomNumber, 5, '0', STR_PAD_LEFT);
+        $applicationCodeRandom            = 'ONESIGN-'.$styleNumber;
+        $application->code                = $applicationCodeRandom;
+        $application->name                = Auth::user()->name;
+        $application->status              = $request->input('status');
+        $application->application_type    = $request->input('application_type');
+        $application->position            = $request->input('position');
+        $application->reason              = $request->input('reason');
+        $application->proposal_name       = $request->input('proposal_name');
+        $application->proponent           = $request->input('proponent');
         $application->account_information = $request->input('account_information');
-        $application->delivery_date = $request->input('delivery_date');
-        $application->delivery_time = $request->input('delivery_time');
-        $application->user_id = $request->input('user_id');
-        $application->user_application = Auth::id();
-        $application->price_proposal = $request->input('price_proposal');
+        $application->delivery_date       = $request->input('delivery_date');
+        $application->delivery_time       = $request->input('delivery_time');
+        $application->user_id             = $request->input('user_id');
+        $application->user_application    = Auth::id();
+        $application->price_proposal      = $request->input('price_proposal');
         $application->save();
 
         $application->users()->sync($request->user_consider);
@@ -270,10 +247,6 @@ class ApplicationController extends Controller
                 ]);
                 $application->files()->syncWithoutDetaching([$newFile->id]);
             }
-        }
-        if (!$request->user_id || !$request->user_consider)
-        {
-            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
         }
         event(new SendMailDecisionEvent($application));
         event(new SendMailFollowEvent($application));
@@ -329,10 +302,6 @@ class ApplicationController extends Controller
             ]);
         }
         $application->users()->sync($request->user_consider);
-        if (!$request->user_id || !$request->user_consider)
-        {
-            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
-        }
         event(new SendMailDecisionEvent($application));
         event(new SendMailFollowEvent($application));
 
@@ -345,11 +314,6 @@ class ApplicationController extends Controller
         $application->fill($request->except('_token'));
         $application->save();
         $application->users()->sync($request->user_consider);
-
-        if (!$request->user_id || !$request->user_consider)
-        {
-            throw ValidationException::withMessages(['userId' => 'UserId hoặc userConsiderId không tồn tại']);
-        }
 
         event(new SendMailDecisionEvent($application));
         event(new SendMailFollowEvent($application));
